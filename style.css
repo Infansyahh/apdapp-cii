@@ -1,0 +1,88 @@
+/* Override minimal di atas AdminKit (assets/adminkit/css/app.css) */
+
+/* Tabel lebar penuh di dalam card, teks tidak wrap */
+.table-responsive table { width: 100%; }
+.table th, .table td { white-space: nowrap; }
+
+/* Kolom input stocktake */
+.input-kecil { width: 90px; }
+.input-lebar { width: 180px; }
+
+/* Footer AdminKit */
+.footer { padding: 12px 24px; }
+
+/* Navbar brand halaman form publik */
+.page-form .navbar {
+  background-color: #14532d !important; /* hijau tua, sama dgn sidebar dashboard */
+  border-bottom: 0;
+}
+.page-form .navbar-brand { color: #fff; }
+.page-form .navbar-brand [data-feather] { stroke: #fff; }
+.page-form .navbar .btn-outline-primary {
+  border-color: #fff;
+  color: #fff;
+}
+.page-form .navbar .btn-outline-primary:hover {
+  background-color: #fff;
+  border-color: #fff;
+  color: #14532d;
+}
+
+/* ===== Semua halaman: elemen form dibedakan dari background body ===== */
+.form-control,
+.form-select,
+textarea.form-control {
+  background-color: #f4f6f5;
+  border: 1px solid #d3d8d5;
+  color: #000;
+}
+.form-control:focus,
+.form-select:focus,
+textarea.form-control:focus {
+  background-color: #fff;
+  border-color: #16a34a;
+  box-shadow: 0 0 0 .2rem rgba(22, 163, 74, .18);
+}
+.form-control::placeholder,
+textarea.form-control::placeholder { color: #555; opacity: 1; }
+
+.form-check-input { background-color: #f4f6f5; border-color: #b9c0bc; }
+.form-check-input:checked { background-color: #16a34a; border-color: #16a34a; }
+
+/* Kartu & panel tidak menyatu dengan body putih */
+.card { border: 1px solid #e6eae8; }
+.card-header { background-color: #fbfcfc; border-bottom: 1px solid #e6eae8; }
+
+/* KPI Monitoring: tinggi kartu seragam, isi sejajar di atas */
+.kpi-card { height: 100%; margin-bottom: 0; } /* jarak pindah ke .row.mb-3 */
+.kpi-card .card-body { min-height: 104px; }
+
+/* Kartu Form Pengambilan: angkat dari background body */
+.page-form .col-lg-9 .card {
+  border: 1px solid #d8ded9;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .10);
+  border-radius: .75rem;
+}
+
+/* Input-group & tombol sekunder tetap kontras */
+.input-group-text { background-color: #eef1f0; border-color: #d3d8d5; color: #000; }
+
+/* ===== Halaman Form Pengambilan: semua teks hitam ===== */
+.page-form main.content { color: #000; }
+
+.page-form .form-label,
+.page-form .form-check-label,
+.page-form .card-title,
+.page-form .card-header .text-muted,
+.page-form .form-control,
+.page-form .form-select,
+.page-form textarea.form-control,
+.page-form option { color: #000; }
+
+.page-form .form-control::placeholder,
+.page-form textarea.form-control::placeholder { color: #333; opacity: 1; }
+
+.page-form .card-header { border-top: 3px solid #16a34a; }
+.page-form .card-title [data-feather] { stroke: #16a34a; width: 20px; height: 20px; }
+.page-form .form-label { font-weight: 600; }
+.page-form .btn-primary { letter-spacing: .3px; }

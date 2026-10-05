@@ -1,0 +1,7 @@
+{
+    // File pages/*.php di-include dari dashboard.php — variabel scope induk
+    // ($stokRows, $bulan) sengaja dideklarasikan via komentar /** @var ... */,
+    // jadi diagnostic "undefined variable" dimatikan agar tidak garis merah.
+    // Diagnostic lain (syntax error, dll) tetap aktif.
+    "intelephense.diagnostics.undefinedVariable": false
+}
