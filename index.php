@@ -65,7 +65,7 @@ $apdList = daftar_apd();
         </a>
         <div class="d-flex align-items-center gap-2">
             <button type="button" class="btn btn-outline-primary theme-toggle-btn" title="Beralih Tema" aria-label="Beralih Tema">
-                <i class="align-middle" data-feather="moon"></i>
+                <i data-feather="moon"></i>
             </button>
             <a class="btn btn-outline-primary" href="dashboard.php">Dashboard</a>
         </div>

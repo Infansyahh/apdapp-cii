@@ -389,17 +389,52 @@ textarea.form-control::placeholder { color: #555; opacity: 1; }
   color: #ffffff !important;
 }
 
-/* Theme Toggle Button Styling */
+/* ==========================================================================
+   TOMBOL GANTI TEMA (semua navbar: dashboard, form, login)
+   ========================================================================== */
 .theme-toggle-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease, color 0.2s ease;
   cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.theme-toggle-btn:hover {
-  transform: scale(1.1);
+/* Ukuran ikon seragam dengan ikon navbar lain (20px) */
+.theme-toggle-btn svg,
+.theme-toggle-btn .feather {
+  width: 20px;
+  height: 20px;
+}
+
+/* Semua item navbar sejajar vertikal (tombol tema vs ikon lonceng dll.) */
+.navbar .nav-item {
+  display: flex;
+  align-items: center;
+}
+
+/* Tombol tema bergaya ikon (navbar dashboard): warna sama .nav-icon AdminKit */
+.navbar .nav-icon.theme-toggle-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent; /* buang latar abu-abu bawaan <button> */
+  border: 0;                     /* buang border kotak bawaan <button> */
+  border-radius: 0;
+  color: #6c757d;
+}
+
+.navbar .nav-icon.theme-toggle-btn:hover,
+.navbar .nav-icon:hover {
+  color: #16a34a;
+}
+
+/* Mode gelap: ikon navbar sejajar warnanya dgn link navbar */
+[data-bs-theme="dark"] .navbar .nav-icon {
+  color: #cbd5e1;
+}
+
+[data-bs-theme="dark"] .navbar .nav-icon:hover {
+  color: #22c55e;
 }
 
 /* ==========================================================================

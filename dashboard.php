@@ -294,9 +294,9 @@ $qNotif = db()->query('SELECT * FROM v_log_transaksi ORDER BY waktu DESC LIMIT 4
             <div class="navbar-collapse collapse">
                 <ul class="navbar-nav navbar-align ms-auto">
                     <!-- Toggle Tema Gelap -->
-                    <li class="nav-item me-1">
-                        <button type="button" class="nav-icon btn btn-link border-0 theme-toggle-btn" title="Beralih Tema" aria-label="Beralih Tema">
-                            <i class="align-middle" data-feather="moon"></i>
+                    <li class="nav-item">
+                        <button type="button" class="nav-icon theme-toggle-btn" title="Beralih Tema" aria-label="Beralih Tema">
+                            <i data-feather="moon"></i>
                         </button>
                     </li>
                     <!-- Notifikasi -->

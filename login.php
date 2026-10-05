@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body data-theme="default" data-layout="fluid">
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
     <button type="button" class="btn btn-outline-secondary theme-toggle-btn" title="Beralih Tema" aria-label="Beralih Tema">
-        <i class="align-middle" data-feather="moon"></i>
+        <i data-feather="moon"></i>
     </button>
 </div>
 <main class="d-flex w-100 h-100">
