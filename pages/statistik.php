@@ -66,13 +66,53 @@ foreach (['apdBulan', 'apdAll', 'orang', 'dept'] as $k) {
     const SD = <?= json_encode($chartData, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
     const PALETTE = ['#16a34a', '#14532d', '#86efac', '#166534', '#4ade80', '#052e16', '#bbf7d0', '#15803d'];
     if (typeof Chart === 'undefined') return;
-    Chart.defaults.font.family = "Inter, sans-serif";
-    Chart.defaults.color = '#000';
+
+    const charts = {};
+
+    function applyThemeToCharts(theme) {
+        const isDark = theme === 'dark';
+        const textColor = isDark ? '#cbd5e1' : '#495057';
+        const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+        const doughnutBorder = isDark ? '#1b2430' : '#ffffff';
+
+        Chart.defaults.font.family = "Inter, sans-serif";
+        Chart.defaults.color = textColor;
+
+        Object.values(charts).forEach(chart => {
+            if (chart.options.scales) {
+                if (chart.options.scales.x) {
+                    chart.options.scales.x.ticks.color = textColor;
+                    chart.options.scales.x.grid.color = gridColor;
+                }
+                if (chart.options.scales.y) {
+                    chart.options.scales.y.ticks.color = textColor;
+                    chart.options.scales.y.grid.color = gridColor;
+                }
+            }
+            if (chart.options.plugins && chart.options.plugins.legend) {
+                chart.options.plugins.legend.labels.color = textColor;
+            }
+            if (chart.config.type === 'doughnut' && chart.data.datasets[0]) {
+                chart.data.datasets[0].borderColor = doughnutBorder;
+            }
+            chart.update();
+        });
+    }
+
+    function currentTheme() {
+        return document.documentElement.getAttribute('data-bs-theme') || 'light';
+    }
 
     function bar(key, horizontal) {
         const d = SD[key];
-        if (!d || !d.labels.length) return;
-        new Chart(document.getElementById('chart-' + key), {
+        const el = document.getElementById('chart-' + key);
+        if (!d || !d.labels.length || !el) return;
+        
+        const isDark = currentTheme() === 'dark';
+        const textColor = isDark ? '#cbd5e1' : '#495057';
+        const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+
+        charts[key] = new Chart(el, {
             type: 'bar',
             data: {
                 labels: d.labels,
@@ -89,28 +129,40 @@ foreach (['apdBulan', 'apdAll', 'orang', 'dept'] as $k) {
                 indexAxis: horizontal ? 'y' : 'x',
                 plugins: { legend: { display: false } },
                 scales: {
-                    x: { beginAtZero: true, ticks: { precision: 0 } },
-                    y: { beginAtZero: true },
+                    x: { beginAtZero: true, ticks: { precision: 0, color: textColor }, grid: { color: gridColor } },
+                    y: { beginAtZero: true, ticks: { color: textColor }, grid: { color: gridColor } },
                 },
             },
         });
     }
+
     function dough(key) {
         const d = SD[key];
-        if (!d || !d.labels.length) return;
-        new Chart(document.getElementById('chart-' + key), {
+        const el = document.getElementById('chart-' + key);
+        if (!d || !d.labels.length || !el) return;
+
+        const isDark = currentTheme() === 'dark';
+        const textColor = isDark ? '#cbd5e1' : '#495057';
+        const doughnutBorder = isDark ? '#1b2430' : '#ffffff';
+
+        charts[key] = new Chart(el, {
             type: 'doughnut',
             data: {
                 labels: d.labels,
                 datasets: [{
                     data: d.totals,
                     backgroundColor: PALETTE,
-                    borderColor: '#fff',
+                    borderColor: doughnutBorder,
                     borderWidth: 2,
                 }],
             },
             options: {
-                plugins: { legend: { position: 'right' } },
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { color: textColor }
+                    }
+                },
             },
         });
     }
@@ -119,5 +171,9 @@ foreach (['apdBulan', 'apdAll', 'orang', 'dept'] as $k) {
     bar('apdAll', false);
     bar('orang', true);
     dough('dept');
+
+    window.addEventListener('themeChanged', function (e) {
+        applyThemeToCharts(e.detail.theme);
+    });
 })();
 </script>

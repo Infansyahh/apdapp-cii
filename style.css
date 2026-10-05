@@ -67,7 +67,7 @@ textarea.form-control::placeholder { color: #555; opacity: 1; }
 /* Input-group & tombol sekunder tetap kontras */
 .input-group-text { background-color: #eef1f0; border-color: #d3d8d5; color: #000; }
 
-/* ===== Halaman Form Pengambilan: semua teks hitam ===== */
+/* ===== Halaman Form Pengambilan: semua teks hitam (Mode Terang) ===== */
 .page-form main.content { color: #000; }
 
 .page-form .form-label,
@@ -86,3 +86,299 @@ textarea.form-control::placeholder { color: #555; opacity: 1; }
 .page-form .card-title [data-feather] { stroke: #16a34a; width: 20px; height: 20px; }
 .page-form .form-label { font-weight: 600; }
 .page-form .btn-primary { letter-spacing: .3px; }
+
+/* ==========================================================================
+   TEMA GELAP (DARK MODE OVERRIDES)
+   ========================================================================== */
+
+[data-bs-theme="dark"] {
+  color-scheme: dark;
+  --bs-body-bg: #12181f;
+  --bs-body-color: #cbd5e1;
+}
+
+[data-bs-theme="dark"] body {
+  background-color: #12181f !important;
+  color: #cbd5e1 !important;
+}
+
+[data-bs-theme="dark"] .main {
+  background-color: #12181f !important;
+}
+
+/* Top Navbar & Header */
+[data-bs-theme="dark"] .navbar {
+  background-color: #1b2430 !important;
+  border-bottom: 1px solid #2d3b4d !important;
+}
+
+[data-bs-theme="dark"] .navbar-light .navbar-nav .nav-link,
+[data-bs-theme="dark"] .navbar .nav-link,
+[data-bs-theme="dark"] .navbar .sidebar-toggle,
+[data-bs-theme="dark"] .navbar .nav-item .text-muted {
+  color: #cbd5e1 !important;
+}
+
+[data-bs-theme="dark"] .navbar-light .navbar-nav .nav-link:hover,
+[data-bs-theme="dark"] .navbar .nav-link:hover,
+[data-bs-theme="dark"] .navbar .sidebar-toggle:hover {
+  color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .hamburger,
+[data-bs-theme="dark"] .hamburger:before,
+[data-bs-theme="dark"] .hamburger:after {
+  background: #cbd5e1 !important;
+}
+
+/* Sidebar di Tema Gelap (Menyesuaikan dengan tema gelap) */
+[data-bs-theme="dark"] .sidebar,
+[data-bs-theme="dark"] .sidebar-content {
+  background-color: #0f172a !important;
+  border-right: 1px solid #1e293b !important;
+}
+
+[data-bs-theme="dark"] .sidebar-brand {
+  color: #f8fafc !important;
+}
+
+[data-bs-theme="dark"] .sidebar-nav .sidebar-header {
+  color: #64748b !important;
+}
+
+[data-bs-theme="dark"] .sidebar-nav .sidebar-item .sidebar-link {
+  color: #cbd5e1 !important;
+  background-color: transparent;
+}
+
+[data-bs-theme="dark"] .sidebar-nav .sidebar-item .sidebar-link i,
+[data-bs-theme="dark"] .sidebar-nav .sidebar-item .sidebar-link [data-feather] {
+  color: #94a3b8 !important;
+}
+
+[data-bs-theme="dark"] .sidebar-nav .sidebar-item .sidebar-link:hover {
+  color: #ffffff !important;
+  background-color: #1e293b !important;
+}
+
+[data-bs-theme="dark"] .sidebar-nav .sidebar-item .sidebar-link:hover i,
+[data-bs-theme="dark"] .sidebar-nav .sidebar-item .sidebar-link:hover [data-feather] {
+  color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .sidebar-nav .sidebar-item.active .sidebar-link {
+  color: #ffffff !important;
+  background-color: #15803d !important; /* aksen hijau gelap untuk item aktif */
+  border-left: 3px solid #22c55e !important;
+}
+
+[data-bs-theme="dark"] .sidebar-nav .sidebar-item.active .sidebar-link i,
+[data-bs-theme="dark"] .sidebar-nav .sidebar-item.active .sidebar-link [data-feather] {
+  color: #ffffff !important;
+}
+
+/* Cards & Containers */
+[data-bs-theme="dark"] .card {
+  background-color: #1b2430 !important;
+  border: 1px solid #2d3b4d !important;
+  color: #cbd5e1 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-bs-theme="dark"] .card-header {
+  background-color: #171e28 !important;
+  border-bottom: 1px solid #2d3b4d !important;
+  color: #f1f5f9 !important;
+}
+
+[data-bs-theme="dark"] .card-title,
+[data-bs-theme="dark"] h1, 
+[data-bs-theme="dark"] h2, 
+[data-bs-theme="dark"] h3, 
+[data-bs-theme="dark"] h4, 
+[data-bs-theme="dark"] h5, 
+[data-bs-theme="dark"] h6 {
+  color: #f8fafc !important;
+}
+
+/* Form Elements & Inputs */
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select,
+[data-bs-theme="dark"] textarea.form-control {
+  background-color: #0f172a !important;
+  border: 1px solid #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+[data-bs-theme="dark"] .form-control:focus,
+[data-bs-theme="dark"] .form-select:focus,
+[data-bs-theme="dark"] textarea.form-control:focus {
+  background-color: #1e293b !important;
+  border-color: #16a34a !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 .2rem rgba(22, 163, 74, .25) !important;
+}
+
+[data-bs-theme="dark"] .form-control::placeholder,
+[data-bs-theme="dark"] textarea.form-control::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+[data-bs-theme="dark"] option {
+  background-color: #0f172a !important;
+  color: #f1f5f9 !important;
+}
+
+[data-bs-theme="dark"] .form-check-input {
+  background-color: #0f172a !important;
+  border-color: #475569 !important;
+}
+
+[data-bs-theme="dark"] .form-check-input:checked {
+  background-color: #16a34a !important;
+  border-color: #16a34a !important;
+}
+
+[data-bs-theme="dark"] .input-group-text {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Halaman Form Pengambilan Override untuk Tema Gelap */
+[data-bs-theme="dark"].page-form main.content,
+[data-bs-theme="dark"] .page-form main.content {
+  color: #cbd5e1 !important;
+}
+
+[data-bs-theme="dark"] .page-form .form-label,
+[data-bs-theme="dark"] .page-form .form-check-label,
+[data-bs-theme="dark"] .page-form .card-title,
+[data-bs-theme="dark"] .page-form .card-header .text-muted,
+[data-bs-theme="dark"] .page-form .form-control,
+[data-bs-theme="dark"] .page-form .form-select,
+[data-bs-theme="dark"] .page-form textarea.form-control,
+[data-bs-theme="dark"] .page-form option {
+  color: #f1f5f9 !important;
+}
+
+[data-bs-theme="dark"] .page-form .navbar {
+  background-color: #0f2918 !important;
+}
+
+[data-bs-theme="dark"] .page-form .card-header {
+  border-top: 3px solid #22c55e !important;
+}
+
+[data-bs-theme="dark"] .page-form .card-title [data-feather] {
+  stroke: #22c55e !important;
+}
+
+/* Tabel di Mode Gelap */
+[data-bs-theme="dark"] .table {
+  --bs-table-color: #cbd5e1;
+  --bs-table-bg: transparent;
+  --bs-table-border-color: #2d3b4d;
+  --bs-table-striped-bg: rgba(255, 255, 255, 0.02);
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1 !important;
+}
+
+[data-bs-theme="dark"] .table th,
+[data-bs-theme="dark"] .table td {
+  border-color: #2d3b4d !important;
+  color: #cbd5e1 !important;
+}
+
+[data-bs-theme="dark"] .table thead th {
+  background-color: #171e28 !important;
+  color: #f1f5f9 !important;
+  border-bottom: 2px solid #2d3b4d !important;
+}
+
+[data-bs-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: #16202c !important;
+  color: #cbd5e1 !important;
+}
+
+[data-bs-theme="dark"] .table-hover > tbody > tr:hover > * {
+  background-color: #202b3b !important;
+  color: #ffffff !important;
+}
+
+/* Dropdown Menu & Modals */
+[data-bs-theme="dark"] .dropdown-menu {
+  background-color: #1b2430 !important;
+  border-color: #2d3b4d !important;
+  color: #cbd5e1 !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important;
+}
+
+[data-bs-theme="dark"] .dropdown-item {
+  color: #cbd5e1 !important;
+}
+
+[data-bs-theme="dark"] .dropdown-item:hover,
+[data-bs-theme="dark"] .dropdown-item:focus {
+  background-color: #263345 !important;
+  color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .dropdown-divider {
+  border-top-color: #2d3b4d !important;
+}
+
+[data-bs-theme="dark"] .dropdown-menu-header {
+  background-color: #171e28 !important;
+  border-bottom: 1px solid #2d3b4d !important;
+  color: #f1f5f9 !important;
+}
+
+[data-bs-theme="dark"] .list-group-item {
+  background-color: #1b2430 !important;
+  border-color: #2d3b4d !important;
+  color: #cbd5e1 !important;
+}
+
+[data-bs-theme="dark"] .list-group-item:hover {
+  background-color: #232f3e !important;
+  color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .list-group-item .text-dark {
+  color: #f1f5f9 !important;
+}
+
+/* Teks Muted & Utility Classes */
+[data-bs-theme="dark"] .text-muted {
+  color: #94a3b8 !important;
+}
+
+/* Footer */
+[data-bs-theme="dark"] .footer {
+  background-color: #12181f !important;
+  border-top: 1px solid #2d3b4d !important;
+  color: #94a3b8 !important;
+}
+
+[data-bs-theme="dark"] .footer a.text-muted {
+  color: #94a3b8 !important;
+}
+
+[data-bs-theme="dark"] .footer a.text-muted:hover {
+  color: #ffffff !important;
+}
+
+/* Theme Toggle Button Styling */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.1);
+}

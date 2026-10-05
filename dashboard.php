@@ -158,6 +158,12 @@ $qNotif = db()->query('SELECT * FROM v_log_transaksi ORDER BY waktu DESC LIMIT 4
     <link rel="stylesheet" href="assets/adminkit/css/app.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="assets/css/vue3-toastify.css">
+    <script>
+        (function() {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-bs-theme', t);
+        })();
+    </script>
 </head>
 <body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
 <div class="wrapper">
@@ -210,6 +216,12 @@ $qNotif = db()->query('SELECT * FROM v_log_transaksi ORDER BY waktu DESC LIMIT 4
 
             <div class="navbar-collapse collapse">
                 <ul class="navbar-nav navbar-align ms-auto">
+                    <!-- Toggle Tema Gelap -->
+                    <li class="nav-item me-1">
+                        <button type="button" class="nav-icon btn btn-link border-0 theme-toggle-btn" title="Beralih Tema" aria-label="Beralih Tema">
+                            <i class="align-middle" data-feather="moon"></i>
+                        </button>
+                    </li>
                     <!-- Notifikasi -->
                     <li class="nav-item dropdown">
                         <a class="nav-icon dropdown-toggle" href="#" id="notifDropdown" data-bs-toggle="dropdown">
@@ -299,5 +311,6 @@ $qNotif = db()->query('SELECT * FROM v_log_transaksi ORDER BY waktu DESC LIMIT 4
 
 <script src="assets/adminkit/js/app.js"></script>
 <script src="assets/js/toast.iife.js"></script>
+<script src="assets/js/theme-toggle.js"></script>
 </body>
 </html>

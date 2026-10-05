@@ -50,6 +50,12 @@ $apdList = daftar_apd();
     <link rel="stylesheet" href="assets/adminkit/css/app.css">
     <link rel="stylesheet" href="assets/css/vue3-toastify.css">
     <link rel="stylesheet" href="style.css">
+    <script>
+        (function() {
+            var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-bs-theme', t);
+        })();
+    </script>
 </head>
 <body class="page-form" data-theme="default" data-layout="fluid">
 <nav class="navbar navbar-expand navbar-light bg-white border-bottom">
@@ -57,7 +63,10 @@ $apdList = daftar_apd();
         <a class="navbar-brand fw-bold" href="index.php">
             <i class="align-middle me-2" data-feather="shield"></i>APD CII BOGOR
         </a>
-        <div class="d-flex">
+        <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-outline-primary theme-toggle-btn" title="Beralih Tema" aria-label="Beralih Tema">
+                <i class="align-middle" data-feather="moon"></i>
+            </button>
             <a class="btn btn-outline-primary" href="dashboard.php">Dashboard</a>
         </div>
     </div>
@@ -177,5 +186,6 @@ $apdList = daftar_apd();
 
 <script src="assets/adminkit/js/app.js"></script>
 <script src="assets/js/toast.iife.js"></script>
+<script src="assets/js/theme-toggle.js"></script>
 </body>
 </html>
