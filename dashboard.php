@@ -165,6 +165,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
+    } elseif ($aksi === 'tambah_apd') {
+        $nama       = trim($_POST['nama'] ?? '');
+        $satuanPack = trim($_POST['satuan_pack'] ?? 'Pack') ?: 'Pack';
+        $jmlSatuan  = max(1, (int)($_POST['jumlah_satuan'] ?? 1));
+        $harga      = max(0.0, (float)($_POST['harga'] ?? 0));
+        $stokAwal   = max(0, (int)($_POST['stok_awal'] ?? 0));
+        $minStok    = max(0, (int)($_POST['minimum_stok'] ?? 0));
+
+        if ($nama === '') {
+            $pesan = 'Nama APD wajib diisi.';
+            $warna = 'danger';
+        } else {
+            $stCek = db()->prepare('SELECT COUNT(*) FROM apd_master WHERE LOWER(nama) = LOWER(?)');
+            $stCek->execute([$nama]);
+            if ($stCek->fetchColumn() > 0) {
+                $pesan = "Gagal: Jenis APD '$nama' sudah terdaftar di sistem.";
+                $warna = 'danger';
+            } else {
+                try {
+                    $st = db()->prepare('INSERT INTO apd_master (nama, satuan_pack, jumlah_satuan, harga, stok_awal, minimum_stok) VALUES (?,?,?,?,?,?)');
+                    $st->execute([$nama, $satuanPack, $jmlSatuan, $harga, $stokAwal, $minStok]);
+                    $pesan = "Jenis APD baru '$nama' berhasil ditambahkan.";
+                    $warna = 'success';
+                } catch (PDOException $ex) {
+                    $pesan = "Gagal menambahkan APD: " . $ex->getMessage();
+                    $warna = 'danger';
+                }
+            }
+        }
     }
 }
 

@@ -5,9 +5,16 @@ if (!defined('APDCII')) { http_response_code(404); exit; }
 // Tab Stock APD: posisi stok sistem per jenis
 ?>
 <div class="card">
-    <div class="card-header">
-        <h5 class="card-title mb-0">Stok APD</h5>
-        <div class="text-muted small mt-1">Stok Sistem = Stok Awal + Masuk &minus; Keluar Net + Adj Stocktake Kumulatif</div>
+    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <div>
+            <h5 class="card-title mb-0">Stok APD</h5>
+            <div class="text-muted small mt-1">Stok Sistem = Stok Awal + Masuk &minus; Keluar Net + Adj Stocktake Kumulatif</div>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary btn-sm d-inline-flex align-items-center btn-tambah-apd" title="Tambah Jenis APD">
+                <i class="align-middle me-1" data-feather="plus-circle"></i> Tambah Jenis APD
+            </button>
+        </div>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -209,6 +216,68 @@ if (!defined('APDCII')) { http_response_code(404); exit; }
     </div>
 </div>
 
+<!-- ==========================================
+     POPUP CARD FORM TAMBAH APD BARU
+     ========================================== -->
+<div class="modal fade popup-card-modal" id="modalTambahApd" tabindex="-1" aria-labelledby="modalTambahApdLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <form method="post" action="?tab=stok">
+                <input type="hidden" name="aksi" value="tambah_apd">
+                <input type="hidden" name="tab" value="stok">
+                <div class="modal-header">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-success bg-opacity-10 text-success p-2 rounded me-2 d-flex align-items-center justify-content-center">
+                            <i class="align-middle" data-feather="plus-circle" style="width:20px;height:20px;"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold mb-0" id="modalTambahApdLabel">Tambah Jenis APD Baru</h5>
+                            <div class="text-muted small">Daftarkan jenis Alat Pelindung Diri baru ke dalam master data</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nama APD <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="nama" id="tambahApdNama" placeholder="Contoh: Masker N95, Kacamata Safety, dll." required>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Satuan Pack</label>
+                            <input type="text" class="form-control" name="satuan_pack" placeholder="Contoh: Pack, Box, Pcs, Roll" value="Pack" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Jumlah Satuan (Pcs/Pack)</label>
+                            <input type="number" class="form-control" name="jumlah_satuan" value="1" min="1" required>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Harga Satuan (Rp)</label>
+                            <input type="number" class="form-control" name="harga" value="0" min="0" step="any" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Stok Awal</label>
+                            <input type="number" class="form-control" name="stok_awal" value="0" min="0" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Minimum Stok</label>
+                            <input type="number" class="form-control" name="minimum_stok" value="0" min="0" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="align-middle me-1" data-feather="check"></i> Simpan Data APD
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Form Tersembunyi untuk Hapus APD -->
 <form id="formHapusApd" method="post" action="?tab=stok" style="display: none;">
     <input type="hidden" name="aksi" value="hapus_apd">
@@ -221,6 +290,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirmEditModalEl = document.getElementById('modalConfirmEdit');
     const confirmHapusModalEl = document.getElementById('modalConfirmHapus');
     const editModalEl = document.getElementById('modalEditApd');
+    const tambahModalEl = document.getElementById('modalTambahApd');
 
     let pendingEditData = null;
     let pendingHapusId = null;
@@ -281,6 +351,16 @@ document.addEventListener('DOMContentLoaded', function () {
             const activeModal = document.querySelector('.modal.show');
             if (activeModal) hidePopup(activeModal);
         }
+    });
+
+    // Klik tombol Tambah Jenis APD: Buka popup card form tambah APD
+    document.querySelectorAll('.btn-tambah-apd').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const form = tambahModalEl ? tambahModalEl.querySelector('form') : null;
+            if (form) form.reset();
+            showPopup(tambahModalEl);
+        });
     });
 
     function populateEditForm(data) {
