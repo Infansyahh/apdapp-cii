@@ -1,0 +1,13 @@
+# Editor / IDE
+.vscode/
+
+# Archive
+apdcii.zip
+
+# Logs
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
