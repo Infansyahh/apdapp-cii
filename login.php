@@ -11,7 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $st->execute([$email]);
     $user = $st->fetch();
 
-    if ($user && password_verify($pass, $user['password_hash'])) {
+    // Password disimpan & dibandingkan sebagai teks biasa (tanpa password_hash)
+    if ($user && $pass !== '' && $pass === $user['password_hash']) {
         $_SESSION['email'] = $user['email'];
         $_SESSION['nama']  = $user['nama'];
         header('Location: dashboard.php?login=1');

@@ -1,8 +1,8 @@
 <?php
 // Hanya boleh di-include dari dashboard.php
 if (!defined('APDCII')) { http_response_code(404); exit; }
-// Tab Log Transaksi: semua mutasi dari view v_log_transaksi
-$qLog = db()->query('SELECT * FROM v_log_transaksi ORDER BY waktu DESC LIMIT 300')->fetchAll();
+// Tab Log Transaksi: semua mutasi (subquery di log_transaksi(), tanpa VIEW - lihat config.php)
+$qLog = log_transaksi(300);
 ?>
 <div class="card">
     <div class="card-header">

@@ -140,7 +140,7 @@ if (!defined('APDCII')) { http_response_code(404); exit; }
                 <div class="confirm-name-box border-danger border-opacity-25 bg-danger bg-opacity-10 text-danger fw-bold fs-5 mb-3" id="confirmHapusNamaApd">-</div>
                 <div class="alert alert-warning py-2 px-3 small text-start mb-0 d-flex align-items-start">
                     <i class="align-middle me-2 flex-shrink-0 mt-1" data-feather="info" style="width:16px;height:16px;"></i>
-                    <span>Tindakan ini tidak dapat dibatalkan. APD yang memiliki riwayat transaksi (pengambilan, masuk, opname) tidak dapat dihapus.</span>
+                    <span>Jenis APD akan dihapus dari daftar dan tidak bisa dipilih lagi pada formulir. Riwayat transaksi yang sudah tercatat tetap tersimpan.</span>
                 </div>
             </div>
             <div class="modal-footer border-0 pt-0 px-4 pb-4 justify-content-center gap-2">

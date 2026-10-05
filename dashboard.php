@@ -16,6 +16,7 @@ function stok_rows(string $bulan): array {
         (SELECT s.actual FROM stocktake s WHERE s.jenis_apd_id = m.id AND s.bulan = '$bulan') AS actual_bulan,
         (SELECT s.keterangan FROM stocktake s WHERE s.jenis_apd_id = m.id AND s.bulan = '$bulan') AS keterangan_bulan
     FROM apd_master m
+    WHERE m.deleted_at IS NULL
     ORDER BY m.nama";
     $rows = db()->query($sql)->fetchAll();
     foreach ($rows as &$r) {
@@ -127,37 +128,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $minStok    = max(0, (int)($_POST['minimum_stok'] ?? 0));
 
         if ($id >= 1 && $nama !== '') {
-            try {
-                $st = db()->prepare('UPDATE apd_master SET nama = ?, satuan_pack = ?, jumlah_satuan = ?, harga = ?, stok_awal = ?, minimum_stok = ? WHERE id = ?');
-                $st->execute([$nama, $satuanPack, $jmlSatuan, $harga, $stokAwal, $minStok, $id]);
-                $pesan = "Data APD '$nama' berhasil diperbarui.";
-                $warna = 'success';
-            } catch (PDOException $ex) {
-                $pesan = "Gagal memperbarui APD: " . $ex->getMessage();
+            // Duplikat hanya dicek antar APD aktif (APD terhapus boleh memakai nama yang sama)
+            $stDup = db()->prepare('SELECT COUNT(*) FROM apd_master WHERE LOWER(nama) = LOWER(?) AND id <> ? AND deleted_at IS NULL');
+            $stDup->execute([$nama, $id]);
+            if ($stDup->fetchColumn() > 0) {
+                $pesan = "Gagal: Jenis APD '$nama' sudah terdaftar di sistem.";
                 $warna = 'danger';
+            } else {
+                try {
+                    $st = db()->prepare('UPDATE apd_master SET nama = ?, satuan_pack = ?, jumlah_satuan = ?, harga = ?, stok_awal = ?, minimum_stok = ? WHERE id = ?');
+                    $st->execute([$nama, $satuanPack, $jmlSatuan, $harga, $stokAwal, $minStok, $id]);
+                    $pesan = "Data APD '$nama' berhasil diperbarui.";
+                    $warna = 'success';
+                } catch (PDOException $ex) {
+                    $pesan = "Gagal memperbarui APD: " . $ex->getMessage();
+                    $warna = 'danger';
+                }
             }
         } else {
             $pesan = 'Nama APD wajib diisi.';
             $warna = 'danger';
         }
     } elseif ($aksi === 'hapus_apd') {
+        // Soft delete: baris tetap ada (riwayat transaksi & FK aman), hanya ditandai deleted_at
         $id = (int)($_POST['id'] ?? 0);
         if ($id >= 1) {
-            $stName = db()->prepare('SELECT nama FROM apd_master WHERE id = ?');
+            $stName = db()->prepare('SELECT nama, deleted_at FROM apd_master WHERE id = ?');
             $stName->execute([$id]);
-            $namaApd = $stName->fetchColumn() ?: "ID #$id";
+            $row = $stName->fetch();
 
-            $cekMasuk  = (int)db()->query("SELECT COUNT(*) FROM apd_masuk WHERE jenis_apd_id = $id")->fetchColumn();
-            $cekAmbil  = (int)db()->query("SELECT COUNT(*) FROM pengambilan WHERE jenis_apd_id = $id")->fetchColumn();
-            $cekOpname = (int)db()->query("SELECT COUNT(*) FROM stocktake WHERE jenis_apd_id = $id")->fetchColumn();
-
-            if ($cekMasuk > 0 || $cekAmbil > 0 || $cekOpname > 0) {
-                $pesan = "Tidak dapat menghapus APD '$namaApd' karena memiliki riwayat transaksi ($cekMasuk barang masuk, $cekAmbil pengambilan, $cekOpname stocktake).";
+            if (!$row) {
+                $pesan = "Jenis APD tidak ditemukan.";
                 $warna = 'danger';
+            } elseif ($row['deleted_at'] !== null) {
+                $pesan = "Jenis APD '" . $row['nama'] . "' sudah pernah dihapus sebelumnya.";
+                $warna = 'warning';
             } else {
                 try {
-                    db()->prepare('DELETE FROM apd_master WHERE id = ?')->execute([$id]);
-                    $pesan = "Data APD '$namaApd' berhasil dihapus.";
+                    db()->prepare('UPDATE apd_master SET deleted_at = NOW() WHERE id = ?')->execute([$id]);
+                    $pesan = "Jenis APD '" . $row['nama'] . "' berhasil dihapus. Riwayat transaksi tetap tersimpan.";
                     $warna = 'success';
                 } catch (PDOException $ex) {
                     $pesan = "Gagal menghapus APD: " . $ex->getMessage();
@@ -177,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pesan = 'Nama APD wajib diisi.';
             $warna = 'danger';
         } else {
-            $stCek = db()->prepare('SELECT COUNT(*) FROM apd_master WHERE LOWER(nama) = LOWER(?)');
+            $stCek = db()->prepare('SELECT COUNT(*) FROM apd_master WHERE LOWER(nama) = LOWER(?) AND deleted_at IS NULL');
             $stCek->execute([$nama]);
             if ($stCek->fetchColumn() > 0) {
                 $pesan = "Gagal: Jenis APD '$nama' sudah terdaftar di sistem.";
@@ -194,12 +203,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
+    } elseif (in_array($aksi, ['tambah_opsi', 'edit_opsi', 'hapus_opsi'], true)) {
+        // ---- Pengaturan Form: kelola opsi dropdown form pengambilan ----
+        $kat     = $_POST['kategori'] ?? '';
+        $id      = (int) ($_POST['id'] ?? 0);
+        $label   = trim($_POST['label'] ?? '');
+        $panjang = function_exists('mb_strlen') ? mb_strlen($label) : strlen($label);
+
+        if (!in_array($kat, FORM_OPSI_KATEGORI, true)) {
+            $pesan = 'Kategori opsi tidak dikenal.';
+            $warna = 'danger';
+        } elseif (!form_opsi_siap()) {
+            $pesan = 'Tabel form_options belum siap di database.';
+            $warna = 'danger';
+        } elseif ($panjang > 100) {
+            $pesan = 'Label opsi maksimal 100 karakter.';
+            $warna = 'danger';
+        } elseif ($aksi === 'tambah_opsi') {
+            if ($kat === 'monitoring') {
+                $pesan = 'Grup Monitoring tidak bisa ditambah: nilai 1 & 2 terkunci untuk perhitungan transaksi.';
+                $warna = 'warning';
+            } elseif ($label === '') {
+                $pesan = 'Label opsi wajib diisi.';
+                $warna = 'danger';
+            } else {
+                $dup = db()->prepare('SELECT COUNT(*) FROM form_options WHERE kategori = ? AND LOWER(label) = LOWER(?)');
+                $dup->execute([$kat, $label]);
+                if ($dup->fetchColumn() > 0) {
+                    $pesan = "Opsi '$label' sudah ada di grup ini.";
+                    $warna = 'danger';
+                } else {
+                    $mx = db()->prepare('SELECT IFNULL(MAX(urutan), 0) FROM form_options WHERE kategori = ?');
+                    $mx->execute([$kat]);
+                    db()->prepare('INSERT INTO form_options (kategori, nilai, label, urutan) VALUES (?,?,?,?)')
+                        ->execute([$kat, $label, $label, (int) $mx->fetchColumn() + 1]);
+                    $pesan = "Opsi '$label' berhasil ditambahkan.";
+                }
+            }
+        } elseif ($aksi === 'edit_opsi') {
+            $st = db()->prepare('SELECT kategori, nilai FROM form_options WHERE id = ?');
+            $st->execute([$id]);
+            $lama = $st->fetch();
+            if (!$lama) {
+                $pesan = 'Opsi tidak ditemukan.';
+                $warna = 'danger';
+            } elseif ($lama['kategori'] !== $kat) {
+                $pesan = 'Opsi tidak cocok dengan kategori.';
+                $warna = 'danger';
+            } elseif ($label === '') {
+                $pesan = 'Label opsi wajib diisi.';
+                $warna = 'danger';
+            } else {
+                $cek = db()->prepare('SELECT COUNT(*) FROM form_options WHERE kategori = ? AND LOWER(label) = LOWER(?) AND id <> ?');
+                $cek->execute([$kat, $label, $id]);
+                if ($cek->fetchColumn() > 0) {
+                    $pesan = "Opsi '$label' sudah ada di grup ini.";
+                    $warna = 'danger';
+                } elseif ($kat === 'monitoring') {
+                    // nilai 1/2 terkunci (dipakai CASE WHEN di log_transaksi())
+                    db()->prepare('UPDATE form_options SET label = ? WHERE id = ?')->execute([$label, $id]);
+                    $pesan = "Label monitoring diperbarui menjadi '$label'.";
+                } else {
+                    db()->prepare('UPDATE form_options SET label = ?, nilai = ? WHERE id = ?')
+                        ->execute([$label, $label, $id]);
+                    $pesan = "Opsi '$label' berhasil diperbarui.";
+                }
+            }
+        } elseif ($aksi === 'hapus_opsi') {
+            if ($kat === 'monitoring') {
+                $pesan = 'Grup Monitoring tidak bisa dihapus karena jadi dasar hitungan +/- transaksi.';
+                $warna = 'warning';
+            } else {
+                $jml = db()->prepare('SELECT COUNT(*) FROM form_options WHERE kategori = ?');
+                $jml->execute([$kat]);
+                if ((int) $jml->fetchColumn() <= 1) {
+                    $pesan = 'Tidak bisa menghapus opsi terakhir pada satu grup, karena form jadi kosong.';
+                    $warna = 'danger';
+                } else {
+                    db()->prepare('DELETE FROM form_options WHERE id = ? AND kategori = ?')->execute([$id, $kat]);
+                    $pesan = 'Opsi berhasil dihapus.';
+                }
+            }
+        }
     }
 }
 
 // ---- Data per tab ----
 $tab = $_POST['tab'] ?? $_GET['tab'] ?? 'monitoring';
-$tabs = ['monitoring', 'masuk', 'stok', 'log', 'stocktake', 'statistik'];
+$tabs = ['monitoring', 'masuk', 'stok', 'log', 'stocktake', 'statistik', 'pengaturan'];
 if (!in_array($tab, $tabs, true)) $tab = 'monitoring';
 
 $judul = [
@@ -209,6 +300,7 @@ $judul = [
     'log'        => ['Log Transaksi APD', 'Semua mutasi masuk / keluar / koreksi'],
     'stocktake'  => ['Stocktake Bulanan', 'Opname bulan ' . $bulan],
     'statistik'  => ['Statistik Pengambilan', 'Analisa pengambilan APD per periode'],
+    'pengaturan' => ['Pengaturan Form', 'Kustomisasi pilihan pada Form Pengambilan'],
 ];
 
 $navItems = [
@@ -222,8 +314,8 @@ $navItems = [
 
 $stokRows = stok_rows($bulan);
 
-// Notifikasi: 4 transaksi terakhir
-$qNotif = db()->query('SELECT * FROM v_log_transaksi ORDER BY waktu DESC LIMIT 4')->fetchAll();
+// Notifikasi: 4 transaksi terakhir (query subquery, tanpa VIEW - lihat config.php)
+$qNotif = log_transaksi(4);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -268,6 +360,12 @@ $qNotif = db()->query('SELECT * FROM v_log_transaksi ORDER BY waktu DESC LIMIT 4
                     </li>
                 <?php endforeach; ?>
                 <li class="sidebar-header">Lainnya</li>
+                <li class="sidebar-item <?= $tab === 'pengaturan' ? 'active' : '' ?>">
+                    <a class="sidebar-link" href="?tab=pengaturan">
+                        <i class="align-middle" data-feather="settings"></i>
+                        <span class="align-middle">Pengaturan Form</span>
+                    </a>
+                </li>
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="index.php">
                         <i class="align-middle" data-feather="plus-square"></i>
