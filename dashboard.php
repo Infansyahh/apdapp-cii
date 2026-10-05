@@ -341,12 +341,7 @@ $qNotif = log_transaksi(4);
     <nav id="sidebar" class="sidebar js-sidebar">
         <div class="sidebar-content js-simplebar">
             <a class="sidebar-brand" href="dashboard.php">
-                <span class="sidebar-brand-text align-middle">APD CII BOGOR</span>
-                <svg class="sidebar-brand-icon align-middle" width="32px" height="32px" viewBox="0 0 24 24" fill="none"
-                     stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" color="#FFFFFF"
-                     style="margin-left: -3px">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
+                <img class="brand-logo" src="assets/img/logo.png" alt="AMBIL APD" width="303" height="238">
             </a>
 
             <ul class="sidebar-nav">

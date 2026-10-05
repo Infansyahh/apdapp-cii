@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-const DB_HOST = 'sql309.infinityfree.com';
-const DB_NAME = 'if0_43089536_schema';
-const DB_USER = 'if0_43089536';
-const DB_PASS = 'ISI_PASSWORD_INFINITYFREE_ANDA';
+const DB_HOST = 'localhost';
+const DB_NAME = 'apd_cii';
+const DB_USER = 'root';
+const DB_PASS = '';
 
 function db(): PDO {
     static $pdo = null;

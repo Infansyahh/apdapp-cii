@@ -60,8 +60,9 @@ $apdList = daftar_apd();
 <body class="page-form" data-theme="default" data-layout="fluid">
 <nav class="navbar navbar-expand navbar-light bg-white border-bottom">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="index.php">
-            <i class="align-middle me-2" data-feather="shield"></i>APD CII BOGOR
+        <a class="navbar-brand" href="index.php">
+            <img class="brand-logo" src="assets/img/logo-icon.png" alt="AMBIL APD" width="149" height="157">
+            <span class="brand-text">Pengambilan APD</span>
         </a>
         <div class="d-flex align-items-center gap-2">
             <button type="button" class="btn btn-outline-primary theme-toggle-btn" title="Beralih Tema" aria-label="Beralih Tema">
