@@ -117,11 +117,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $n++;
         }
         $pesan = "Stocktake bulan $bulan tersimpan ($n baris).";
+    } elseif ($aksi === 'edit_apd') {
+        $id         = (int)($_POST['id'] ?? 0);
+        $nama       = trim($_POST['nama'] ?? '');
+        $satuanPack = trim($_POST['satuan_pack'] ?? 'Pack');
+        $jmlSatuan  = max(1, (int)($_POST['jumlah_satuan'] ?? 1));
+        $harga      = max(0.0, (float)($_POST['harga'] ?? 0));
+        $stokAwal   = max(0, (int)($_POST['stok_awal'] ?? 0));
+        $minStok    = max(0, (int)($_POST['minimum_stok'] ?? 0));
+
+        if ($id >= 1 && $nama !== '') {
+            try {
+                $st = db()->prepare('UPDATE apd_master SET nama = ?, satuan_pack = ?, jumlah_satuan = ?, harga = ?, stok_awal = ?, minimum_stok = ? WHERE id = ?');
+                $st->execute([$nama, $satuanPack, $jmlSatuan, $harga, $stokAwal, $minStok, $id]);
+                $pesan = "Data APD '$nama' berhasil diperbarui.";
+                $warna = 'success';
+            } catch (PDOException $ex) {
+                $pesan = "Gagal memperbarui APD: " . $ex->getMessage();
+                $warna = 'danger';
+            }
+        } else {
+            $pesan = 'Nama APD wajib diisi.';
+            $warna = 'danger';
+        }
+    } elseif ($aksi === 'hapus_apd') {
+        $id = (int)($_POST['id'] ?? 0);
+        if ($id >= 1) {
+            $stName = db()->prepare('SELECT nama FROM apd_master WHERE id = ?');
+            $stName->execute([$id]);
+            $namaApd = $stName->fetchColumn() ?: "ID #$id";
+
+            $cekMasuk  = (int)db()->query("SELECT COUNT(*) FROM apd_masuk WHERE jenis_apd_id = $id")->fetchColumn();
+            $cekAmbil  = (int)db()->query("SELECT COUNT(*) FROM pengambilan WHERE jenis_apd_id = $id")->fetchColumn();
+            $cekOpname = (int)db()->query("SELECT COUNT(*) FROM stocktake WHERE jenis_apd_id = $id")->fetchColumn();
+
+            if ($cekMasuk > 0 || $cekAmbil > 0 || $cekOpname > 0) {
+                $pesan = "Tidak dapat menghapus APD '$namaApd' karena memiliki riwayat transaksi ($cekMasuk barang masuk, $cekAmbil pengambilan, $cekOpname stocktake).";
+                $warna = 'danger';
+            } else {
+                try {
+                    db()->prepare('DELETE FROM apd_master WHERE id = ?')->execute([$id]);
+                    $pesan = "Data APD '$namaApd' berhasil dihapus.";
+                    $warna = 'success';
+                } catch (PDOException $ex) {
+                    $pesan = "Gagal menghapus APD: " . $ex->getMessage();
+                    $warna = 'danger';
+                }
+            }
+        }
     }
 }
 
 // ---- Data per tab ----
-$tab = $_GET['tab'] ?? 'monitoring';
+$tab = $_POST['tab'] ?? $_GET['tab'] ?? 'monitoring';
 $tabs = ['monitoring', 'masuk', 'stok', 'log', 'stocktake', 'statistik'];
 if (!in_array($tab, $tabs, true)) $tab = 'monitoring';
 
