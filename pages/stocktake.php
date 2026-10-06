@@ -13,8 +13,8 @@ foreach ($stokRows as $r) {
 $akurasiNow   = akurasi_dari($pairsNow);
 $selisihAkur  = ($akurasiNow !== null && $akurasiPrev !== null) ? $akurasiNow - $akurasiPrev : null;
 ?>
-<div class="d-flex justify-content-end align-items-center mb-3">
-    <form method="get" class="d-flex align-items-center gap-2">
+<div class="d-flex flex-wrap justify-content-end align-items-center mb-3">
+    <form method="get" class="d-flex flex-wrap align-items-center gap-2">
         <input type="hidden" name="tab" value="stocktake">
         <label class="text-muted small mb-0 fw-semibold">Bulan Stoktake</label>
         <input type="month" name="bulan" value="<?= e($bulan) ?>" required

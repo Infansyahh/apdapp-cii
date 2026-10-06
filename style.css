@@ -645,6 +645,97 @@ textarea.form-control::placeholder { color: #555; opacity: 1; }
   filter: brightness(0) invert(1);
 }
 
+/* ==========================================================================
+   MOBILE RESPONSIVE (<= 991.98px sidebar overlay, <= 575.98px layar HP)
+   ========================================================================== */
+
+/* Modal: tinggi ikut viewport browser HP (address bar menyusut).
+   Rule asli pakai 100vh !important, jadi override juga harus !important. */
+.modal {
+  height: 100dvh !important;
+}
+
+/* --- Sidebar jadi overlay: menutupi konten, tidak mendorong --- */
+@media (max-width: 991.98px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin-left: -260px; /* default tertutup (menggantikan aturan AdminKit) */
+    z-index: 1040;
+  }
+  .sidebar.collapsed { margin-left: 0; }
+  .main { width: 100%; }
+  body.sidebar-open { overflow: hidden; }
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, .55);
+  z-index: 1035;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease;
+}
+.sidebar-backdrop.show { opacity: 1; visibility: visible; }
+
+/* --- Indikasi scroll tabel: bayangan di tepi kanan (posisi diatur JS) --- */
+.scroll-host { position: relative; }
+.scroll-indicator {
+  position: absolute;
+  right: 0;
+  width: 36px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity .2s ease;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(0, 0, 0, .14));
+}
+.scroll-indicator.show { opacity: 1; }
+[data-bs-theme="dark"] .scroll-indicator {
+  background: linear-gradient(to right, rgba(18, 24, 31, 0), rgba(0, 0, 0, .55));
+}
+
+/* --- Layar HP: navbar, modal, form --- */
+@media (max-width: 575.98px) {
+  .navbar { padding: .6rem .75rem; }
+  .nav-icon { padding: .4rem .5rem; }
+  .navbar .nav-link { padding: .35rem .5rem; }
+  .navbar .navbar-brand .brand-logo { height: 28px; }
+
+  /* Modal tinggi tetap bisa digulir sampai tombol bawah */
+  .modal { align-items: flex-start; }
+  .modal-dialog { margin-top: .75rem; transform: none; }
+  .modal.show .modal-dialog { transform: none; }
+  .modal-header, .modal-body { padding: 1rem; }
+  .modal-footer { flex-wrap: wrap; gap: .5rem; }
+  .modal-footer .btn { flex: 1 1 auto; }
+
+  /* Input kecil tidak memicu auto-zoom iOS */
+  .form-control-sm, .form-select-sm { font-size: 1rem; }
+  .input-lebar { width: 150px; }
+
+  .content { padding: 1rem 1rem .75rem; }
+
+  /* Input dalam baris flex boleh menyusut, jangan dorong layout */
+  .d-flex > .form-control,
+  .d-flex > .form-select { min-width: 0; }
+}
+
+@media (max-width: 420px) {
+  .page-form .navbar-brand .brand-text { font-size: .92rem; }
+  .page-form .navbar .btn { padding: .3rem .65rem; font-size: .9rem; }
+}
+
+/* Target sentuh besar di perangkat sentuh */
+@media (pointer: coarse) {
+  .nav-icon { padding: .55rem .6rem; }
+  .sidebar-link { padding: .8rem 1.625rem; }
+  .btn-sm { min-height: 38px; }
+}
+
 [data-bs-theme="dark"] .btn-close {
   background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23cbd5e1'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
 }

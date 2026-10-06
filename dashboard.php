@@ -433,7 +433,7 @@ $qNotif = log_transaksi(4);
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle px-2" href="#" id="userDropdown" data-bs-toggle="dropdown">
-                            <i class="align-middle me-1" data-feather="user"></i><?= e($_SESSION['nama']) ?>
+                            <i class="align-middle me-1" data-feather="user"></i><span class="d-none d-sm-inline"><?= e($_SESSION['nama']) ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <div class="dropdown-item-text small"><?= e($_SESSION['email']) ?></div>
@@ -443,7 +443,7 @@ $qNotif = log_transaksi(4);
                         </div>
                     </li>
 
-                    <li class="nav-item">
+                    <li class="nav-item d-none d-lg-inline">
                         <span class="nav-link text-muted"><?= e(date('d M Y')) ?></span>
                     </li>
                 </ul>
@@ -482,5 +482,56 @@ $qNotif = log_transaksi(4);
 <script src="assets/adminkit/js/app.js"></script>
 <script src="assets/js/toast.iife.js"></script>
 <script src="assets/js/theme-toggle.js"></script>
+<script>
+// Sidebar mobile: overlay + backdrop + tutup otomatis. Tabel: indikasi scroll.
+(function () {
+    var sidebar = document.querySelector('.js-sidebar');
+    var toggle = document.querySelector('.js-sidebar-toggle');
+    var mqMobile = window.matchMedia('(max-width: 991.98px)');
+
+    if (sidebar && toggle) {
+        var backdrop = document.createElement('div');
+        backdrop.className = 'sidebar-backdrop';
+        document.body.appendChild(backdrop);
+
+        var sync = function () {
+            var open = mqMobile.matches && sidebar.classList.contains('collapsed');
+            backdrop.classList.toggle('show', open);
+            document.body.classList.toggle('sidebar-open', open);
+        };
+        var close = function () {
+            sidebar.classList.remove('collapsed');
+            sync();
+        };
+
+        toggle.addEventListener('click', function () { setTimeout(sync, 0); });
+        backdrop.addEventListener('click', close);
+        sidebar.querySelectorAll('a').forEach(function (a) {
+            a.addEventListener('click', function () { if (mqMobile.matches) close(); });
+        });
+        window.addEventListener('resize', sync);
+        sync();
+    }
+
+    document.querySelectorAll('.table-responsive').forEach(function (wrap) {
+        var host = wrap.parentElement;
+        if (!host) return;
+        host.classList.add('scroll-host');
+        var ind = document.createElement('div');
+        ind.className = 'scroll-indicator';
+        host.appendChild(ind);
+        var upd = function () {
+            var can = wrap.scrollWidth - wrap.clientWidth > 2;
+            var end = wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 2;
+            ind.style.top = wrap.offsetTop + 'px';
+            ind.style.height = wrap.offsetHeight + 'px';
+            ind.classList.toggle('show', can && !end);
+        };
+        wrap.addEventListener('scroll', upd, { passive: true });
+        window.addEventListener('resize', upd);
+        upd();
+    });
+})();
+</script>
 </body>
 </html>

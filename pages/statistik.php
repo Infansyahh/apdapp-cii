@@ -136,6 +136,11 @@ foreach (['apdBulan', 'apdAll', 'orang', 'dept'] as $k) {
         });
     }
 
+    function legendPos() {
+        // Layar HP: legend di bawah, supaya chart tidak gepeng
+        return window.innerWidth < 576 ? 'bottom' : 'right';
+    }
+
     function dough(key) {
         const d = SD[key];
         const el = document.getElementById('chart-' + key);
@@ -159,7 +164,7 @@ foreach (['apdBulan', 'apdAll', 'orang', 'dept'] as $k) {
             options: {
                 plugins: {
                     legend: {
-                        position: 'right',
+                        position: legendPos(),
                         labels: { color: textColor }
                     }
                 },
@@ -174,6 +179,12 @@ foreach (['apdBulan', 'apdAll', 'orang', 'dept'] as $k) {
 
     window.addEventListener('themeChanged', function (e) {
         applyThemeToCharts(e.detail.theme);
+    });
+
+    window.addEventListener('resize', function () {
+        if (!charts.dept) return;
+        charts.dept.options.plugins.legend.position = legendPos();
+        charts.dept.update();
     });
 })();
 </script>
