@@ -6,6 +6,7 @@ apdcii.zip
 
 # Logs
 *.log
+config.php
 
 # OS junk
 .DS_Store

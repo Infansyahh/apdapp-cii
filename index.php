@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $alasan     = $_POST['alasan'] ?? '';
     $catatan    = trim($_POST['catatan'] ?? '');
 
-    if ($nama === '' || $bundy === '' || $tanggal === '' || $departemen === ''
-        || $factory === '' || $apd < 1 || $jumlah < 1
+    if ($nama === '' || $tanggal === '' || $departemen === ''
+        || $apd < 1 || $jumlah < 1
         || !isset(opsi_monitoring()[$monitoring]) || $alasan === '') {
         $pesan = 'Lengkapi semua field wajib.';
         $warna = 'danger';
@@ -98,7 +98,7 @@ $apdList = daftar_apd();
 
                                 <div class="col-md-6">
                                     <label class="form-label">Nomor Bundy</label>
-                                    <input type="text" name="nomor_bundy" class="form-control" required
+                                    <input type="text" name="nomor_bundy" class="form-control"
                                            placeholder="Nomor unik karyawan" value="<?= e($_POST['nomor_bundy'] ?? '') ?>">
                                 </div>
 
@@ -122,7 +122,7 @@ $apdList = daftar_apd();
                                     <label class="form-label d-block">Factory</label>
                                     <?php foreach (opsi_factory() as $f): ?>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="factory" value="<?= e($f) ?>" required
+                                            <input class="form-check-input" type="radio" name="factory" value="<?= e($f) ?>"
                                                    id="factory<?= mb_strtolower(preg_replace('/[^a-z0-9]/i', '', $f)) ?>"
                                                    <?= (($_POST['factory'] ?? '') === $f) ? 'checked' : '' ?>>
                                             <label class="form-check-label" for="factory<?= mb_strtolower(preg_replace('/[^a-z0-9]/i', '', $f)) ?>"><?= e($f) ?></label>
@@ -188,5 +188,14 @@ $apdList = daftar_apd();
 <script src="assets/adminkit/js/app.js"></script>
 <script src="assets/js/toast.iife.js"></script>
 <script src="assets/js/theme-toggle.js"></script>
+<script>
+    // Radio Factory: klik pilihan yang sudah terpilih untuk membatalkannya
+    document.querySelectorAll('input[name="factory"]').forEach(function (r) {
+        r.addEventListener('click', function () {
+            if (r.dataset.prev === '1') { r.checked = false; }
+            r.dataset.prev = r.checked ? '1' : '';
+        });
+    });
+</script>
 </body>
 </html>

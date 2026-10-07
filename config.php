@@ -127,11 +127,7 @@ function daftar_apd(): array {
     return db()->query('SELECT id, nama FROM apd_master WHERE deleted_at IS NULL ORDER BY nama')->fetchAll();
 }
 
-// Log transaksi gabungan: pengambilan + data masuk + adjustment stocktake.
-// Dipakai sebagai SUBQUERY biasa, bukan VIEW — hosting gratis (InfinityFree)
-// menolak CREATE VIEW (#1142 command denied), jadi view tidak bisa dibuat di server.
-// Struktur kolom sama persis dengan v_log_transaksi lama (waktu, sumber,
-// jenis_transaksi, jenis_apd, quantity, sign, net_quantity, catatan, status).
+
 function log_transaksi(int $limit = 300): array {
     $limit = max(1, $limit);
     $sql = "SELECT * FROM (
@@ -167,4 +163,5 @@ function log_transaksi(int $limit = 300): array {
 
 function bulan_ini(): string {
     return date('Y-m');
+    
 }
