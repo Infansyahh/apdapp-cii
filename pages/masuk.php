@@ -15,7 +15,7 @@ $qMasuk = db()->query('SELECT m.*, a.nama AS nama_apd FROM apd_masuk m
         <form method="post" class="row g-3 align-items-end">
             <input type="hidden" name="aksi" value="masuk">
             <div class="col-md-5">
-                <label class="form-label">Jenis APD</label>
+                <label class="form-label">Jenis APD <span class="req">*</span></label>
                 <select name="jenis_apd" class="form-select" required>
                     <option value="">-- Pilih --</option>
                     <?php foreach ($apdList as $a): ?>
@@ -24,11 +24,11 @@ $qMasuk = db()->query('SELECT m.*, a.nama AS nama_apd FROM apd_masuk m
                 </select>
             </div>
             <div class="col-md-3">
-                <label class="form-label">Quantity</label>
+                <label class="form-label">Quantity <span class="req">*</span></label>
                 <input type="number" name="quantity" min="1" class="form-control" required>
             </div>
-            <div class="col-md-4">
-                <button type="submit" class="btn btn-primary">Simpan</button>
+            <div class="col-md-4 d-grid">
+                <button type="submit" class="btn btn-primary"><i class="me-1" data-feather="save"></i>Simpan</button>
             </div>
         </form>
     </div>

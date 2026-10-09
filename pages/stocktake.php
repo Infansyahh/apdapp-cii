@@ -27,7 +27,7 @@ $selisihAkur  = ($akurasiNow !== null && $akurasiPrev !== null) ? $akurasiNow - 
     <input type="hidden" name="bulan" value="<?= e($bulan) ?>">
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title mb-0">STOKTAKE BULANAN - <?= e($bulan) ?></h5>
+            <h5 class="card-title mb-0">Stocktake Bulanan &middot; <?= e($bulan) ?></h5>
             <div class="text-muted small mt-1">Kosongkan kolom Actual untuk menghapus input baris itu.</div>
         </div>
         <div class="card-body">
@@ -35,10 +35,10 @@ $selisihAkur  = ($akurasiNow !== null && $akurasiPrev !== null) ? $akurasiNow - 
                 <table class="table table-striped table-hover mb-0">
                     <thead>
                         <tr>
-                            <th>No</th><th>Jenis APD</th><th>Stok Sistem Sebelum Adjustment</th>
-                            <th>Minimum Stok</th><th>Input Actual Stoktake</th><th>Selisih</th>
-                            <th>Keterangan</th><th>Status Stok</th><th>Adjustment Dibutuhkan</th>
-                            <th>Akurasi Total Keseluruhan</th><th>Status Selisih</th>
+                            <th>No</th><th>Jenis APD</th><th class="num">Stok Sistem Sebelum Adjustment</th>
+                            <th class="num">Minimum Stok</th><th>Input Actual Stoktake</th><th class="num">Selisih</th>
+                            <th>Keterangan</th><th>Status Stok</th><th class="num">Adjustment Dibutuhkan</th>
+                            <th class="num">Akurasi Total Keseluruhan</th><th>Status Selisih</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,15 +65,15 @@ $selisihAkur  = ($akurasiNow !== null && $akurasiPrev !== null) ? $akurasiNow - 
                         <tr>
                             <td><?= $i ?></td>
                             <td><?= e($r['nama']) ?></td>
-                            <td class="fw-bold"><?= $c ?></td>
-                            <td><?= (int)$r['minimum_stok'] ?></td>
+                            <td class="fw-bold num"><?= $c ?></td>
+                            <td class="num"><?= (int)$r['minimum_stok'] ?></td>
                             <td><input type="number" name="actual[<?= (int)$r['id'] ?>]" min="0"
                                value="<?= $e ?? '' ?>" class="form-control form-control-sm input-kecil"></td>
-                            <td><?= $sel === null ? '-' : (($sel > 0 ? '+' : '') . $sel) ?></td>
+                            <td class="num"><?= $sel === null ? '-' : (($sel > 0 ? '+' : '') . $sel) ?></td>
                             <td><span class="badge <?= $ketCls[$ket] ?>"><?= $ket ?></span></td>
                             <td><?= badge_status($st) ?></td>
-                            <td><?= $sel === null ? '-' : (($sel > 0 ? '+' : '') . $sel) ?></td>
-                            <td><?= $acc === null ? '-' : round($acc, 1) . '%' ?></td>
+                            <td class="num"><?= $sel === null ? '-' : (($sel > 0 ? '+' : '') . $sel) ?></td>
+                            <td class="num"><?= $acc === null ? '-' : round($acc, 1) . '%' ?></td>
                             <td><span class="badge <?= $selCls[$sts] ?>"><?= $sts ?></span></td>
                         </tr>
                     <?php endforeach; ?>
@@ -99,26 +99,26 @@ $selisihAkur  = ($akurasiNow !== null && $akurasiPrev !== null) ? $akurasiNow - 
 
 <div class="card mt-3">
     <div class="card-header">
-        <h5 class="card-title mb-0">PERBANDINGAN AKURASI KESELURUHAN</h5>
+        <h5 class="card-title mb-0">Perbandingan Akurasi Keseluruhan</h5>
     </div>
     <div class="table-responsive">
         <table class="table table-striped mb-0">
             <thead>
                 <tr>
                     <th>Bulan Sebelumnya</th>
-                    <th>Akurasi Bulan Sebelumnya</th>
+                    <th class="num">Akurasi Bulan Sebelumnya</th>
                     <th>Bulan Stoktake</th>
-                    <th>Akurasi Bulan Ini</th>
-                    <th>Selisih Akurasi</th>
+                    <th class="num">Akurasi Bulan Ini</th>
+                    <th class="num">Selisih Akurasi</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="fw-semibold"><?= e($bulanPrev) ?></td>
-                    <td><?= $akurasiPrev === null ? 'Belum ada data' : round($akurasiPrev, 1) . '%' ?></td>
+                    <td class="num"><?= $akurasiPrev === null ? 'Belum ada data' : round($akurasiPrev, 1) . '%' ?></td>
                     <td class="fw-semibold"><?= e($bulan) ?></td>
-                    <td><?= $akurasiNow === null ? 'Belum ada data' : round($akurasiNow, 1) . '%' ?></td>
-                    <td class="fw-bold <?= $selisihAkur === null ? 'text-muted' : ($selisihAkur >= 0 ? 'text-success' : 'text-danger') ?>">
+                    <td class="num"><?= $akurasiNow === null ? 'Belum ada data' : round($akurasiNow, 1) . '%' ?></td>
+                    <td class="fw-bold num <?= $selisihAkur === null ? 'text-muted' : ($selisihAkur >= 0 ? 'text-success' : 'text-danger') ?>">
                         <?= $selisihAkur === null ? '-' : sprintf('%+.1f%%', $selisihAkur) ?>
                     </td>
                 </tr>

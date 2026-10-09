@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $st = db()->prepare('SELECT email, password_hash, nama FROM users WHERE email = ?');
     $st->execute([$email]);
     $user = $st->fetch();
-
+    
     // Password disimpan & dibandingkan sebagai teks biasa (tanpa password_hash)
     if ($user && $pass !== '' && $pass === $user['password_hash']) {
         $_SESSION['email'] = $user['email'];
@@ -38,24 +38,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         })();
     </script>
 </head>
-<body data-theme="default" data-layout="fluid">
+<body class="page-login" data-theme="default" data-layout="fluid">
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
     <button type="button" class="btn btn-outline-secondary theme-toggle-btn" title="Beralih Tema" aria-label="Beralih Tema">
         <i data-feather="moon"></i>
     </button>
 </div>
-<main class="d-flex w-100 h-100">
+<main class="d-flex w-100 h-100 login-main">
     <div class="container d-flex flex-column">
-        <div class="row vh-100">
+        <div class="row min-vh-100">
             <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
                 <div class="d-table-cell align-middle">
 
-                    <div class="text-center mt-4">
-                        <h1 class="h2">APD CII BOGOR</h1>
-                        <p class="lead">Login untuk mengelola stok &amp; monitoring APD</p>
+                    <div class="text-center mt-4 login-brand">
+                        <img class="login-logo" src="assets/img/logo.png" alt="Logo APD CII" width="84" height="89">
+                        <h1 class="h3 mt-3 mb-1">APD CII BOGOR</h1>
+                        <p class="lead mb-0">Login untuk mengelola stok &amp; monitoring APD</p>
                     </div>
 
-                    <div class="card">
+                    <div class="card login-card mt-4">
                         <div class="card-body">
                             <div class="m-sm-3">
                                 <?php if ($pesan) echo flash_div($pesan, 'danger'); ?>
@@ -79,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="text-center mb-3">
+                    <div class="text-center mt-4 mb-4">
                         Butuh input pengambilan APD? <a href="index.php">Form Pengambilan</a>
                     </div>
 

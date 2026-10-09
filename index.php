@@ -75,23 +75,27 @@ $apdList = daftar_apd();
 
 <main class="content">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-9 col-xl-8">
+        <div class="row g-4 justify-content-center">
+
+            <!-- Form: di atas layar kecil, kolom kanan di layar besar -->
+            <div class="col-lg-8 order-lg-2">
                 <div class="card">
                     <div class="card-header pt-3">
                         <h5 class="card-title mb-0 d-flex align-items-center">
                             <i class="me-2" data-feather="clipboard"></i>Form Pengambilan APD
                         </h5>
-                        <div class="text-muted small mt-1">Isi data pengambilan APD sesuai identitas dan kebutuhan.</div>
+                        <div class="text-muted small mt-1">Tanda <span class="req">*</span> wajib diisi.</div>
                     </div>
                     <div class="card-body">
 
                         <?php if ($pesan) echo flash_div($pesan, $warna); ?>
 
                         <form method="post" action="">
+                            <fieldset class="form-section">
+                                <legend class="form-section-title"><span class="step-num">1</span>Identitas</legend>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">Nama Karyawan</label>
+                                    <label class="form-label">Nama Karyawan <span class="req">*</span></label>
                                     <input type="text" name="nama_karyawan" class="form-control" required
                                            placeholder="Nama lengkap" value="<?= e($_POST['nama_karyawan'] ?? '') ?>">
                                 </div>
@@ -103,13 +107,13 @@ $apdList = daftar_apd();
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Tanggal Pengambilan</label>
+                                    <label class="form-label">Tanggal Pengambilan <span class="req">*</span></label>
                                     <input type="date" name="tanggal" class="form-control" required
                                            value="<?= e($_POST['tanggal'] ?? date('Y-m-d')) ?>">
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Departemen</label>
+                                    <label class="form-label">Departemen <span class="req">*</span></label>
                                     <select name="departemen" class="form-select" required>
                                         <option value="">-- Pilih --</option>
                                         <?php foreach (opsi_departemen() as $d): ?>
@@ -117,21 +121,24 @@ $apdList = daftar_apd();
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
+                            </div>
+                            </fieldset>
 
+                            <fieldset class="form-section">
+                                <legend class="form-section-title"><span class="step-num">2</span>Detail Pengambilan</legend>
+                            <div class="row g-3">
                                 <div class="col-12">
                                     <label class="form-label d-block">Factory</label>
-                                    <?php foreach (opsi_factory() as $f): ?>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="factory" value="<?= e($f) ?>"
-                                                   id="factory<?= mb_strtolower(preg_replace('/[^a-z0-9]/i', '', $f)) ?>"
+                                    <div class="seg-group">
+                                        <?php foreach (opsi_factory() as $i => $f): ?>
+                                            <input class="seg-input" type="radio" name="factory" value="<?= e($f) ?>" id="factory<?= (int)$i ?>"
                                                    <?= (($_POST['factory'] ?? '') === $f) ? 'checked' : '' ?>>
-                                            <label class="form-check-label" for="factory<?= mb_strtolower(preg_replace('/[^a-z0-9]/i', '', $f)) ?>"><?= e($f) ?></label>
-                                        </div>
-                                    <?php endforeach; ?>
+                                            <label class="seg-label" for="factory<?= (int)$i ?>"><?= e($f) ?></label>
+                                        <?php endforeach; ?>
+                                    </div>
                                 </div>
-
                                 <div class="col-md-6">
-                                    <label class="form-label">Jenis APD</label>
+                                    <label class="form-label">Jenis APD <span class="req">*</span></label>
                                     <select name="jenis_apd" class="form-select" required>
                                         <option value="">-- Pilih --</option>
                                         <?php foreach ($apdList as $a): ?>
@@ -141,13 +148,13 @@ $apdList = daftar_apd();
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Jumlah APD</label>
+                                    <label class="form-label">Jumlah APD <span class="req">*</span></label>
                                     <input type="number" name="jumlah" min="1" class="form-control" required
                                            placeholder="0" value="<?= e($_POST['jumlah'] ?? '') ?>">
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label">Monitoring APD</label>
+                                <div class="col-12">
+                                    <label class="form-label">Monitoring APD <span class="req">*</span></label>
                                     <select name="monitoring" class="form-select" required>
                                         <option value="">-- Pilih --</option>
                                         <?php foreach (opsi_monitoring() as $val => $label): ?>
@@ -156,8 +163,14 @@ $apdList = daftar_apd();
                                     </select>
                                 </div>
 
+                            </div>
+                            </fieldset>
+
+                            <fieldset class="form-section">
+                                <legend class="form-section-title"><span class="step-num">3</span>Keterangan</legend>
+                                <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">Alasan Pengambilan</label>
+                                    <label class="form-label">Alasan Pengambilan <span class="req">*</span></label>
                                     <select name="alasan" class="form-select" required>
                                         <option value="">-- Pilih --</option>
                                         <?php foreach (opsi_alasan() as $a): ?>
@@ -173,14 +186,32 @@ $apdList = daftar_apd();
                                 </div>
                             </div>
 
+                            </fieldset>
+
                             <div class="mt-3">
-                                <button type="submit" class="btn btn-primary btn-lg w-100">Kirim Data</button>
+                                <button type="submit" class="btn btn-primary btn-lg btn-submit"><i data-feather="send"></i>Kirim Data</button>
                             </div>
                         </form>
 
                     </div>
                 </div>
             </div>
+
+            <!-- Panduan singkat: kolom kiri di layar besar, turun ke bawah form di layar kecil -->
+            <aside class="col-lg-4 order-lg-1">
+                <div class="card guide-card">
+                    <div class="card-body">
+                        <h2 class="guide-title"><i data-feather="info"></i>Cara Pakai</h2>
+                        <ol class="guide-steps">
+                            <li><span class="step-num">1</span><div><strong>Isi identitas</strong><p>Nama, nomor bundy, tanggal, dan departemen.</p></div></li>
+                            <li><span class="step-num">2</span><div><strong>Pilih APD</strong><p>Factory, jenis APD, jumlah, dan monitoring.</p></div></li>
+                            <li><span class="step-num">3</span><div><strong>Kirim data</strong><p>Periksa kembali lalu tekan tombol Kirim Data.</p></div></li>
+                        </ol>
+                        <p class="guide-note"><i data-feather="alert-circle"></i><span>Data yang dikirim langsung tercatat dan dipakai untuk monitoring stok.</span></p>
+                    </div>
+                </div>
+            </aside>
+
         </div>
     </div>
 </main>

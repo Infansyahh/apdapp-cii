@@ -58,7 +58,7 @@ textarea.form-control::placeholder { color: #555; opacity: 1; }
 .kpi-card .card-body { min-height: 104px; }
 
 /* Kartu Form Pengambilan: angkat dari background body */
-.page-form .col-lg-9 .card {
+.page-form main.content .card {
   border: 1px solid #d8ded9;
   box-shadow: 0 8px 24px rgba(0, 0, 0, .10);
   border-radius: .75rem;
@@ -168,8 +168,8 @@ textarea.form-control::placeholder { color: #555; opacity: 1; }
 
 [data-bs-theme="dark"] .sidebar-nav .sidebar-item.active .sidebar-link {
   color: #ffffff !important;
-  background-color: #15803d !important; /* aksen hijau gelap untuk item aktif */
-  border-left: 3px solid #22c55e !important;
+  background: #15803d !important; /* pil: shorthand membuang gradasi bawaan AdminKit */
+  border-left: 3px solid transparent !important; /* teks tetap sejajar (base border 3px) */
 }
 
 [data-bs-theme="dark"] .sidebar-nav .sidebar-item.active .sidebar-link i,
@@ -738,4 +738,432 @@ textarea.form-control::placeholder { color: #555; opacity: 1; }
 
 [data-bs-theme="dark"] .btn-close {
   background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23cbd5e1'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+}
+
+
+/* ==========================================================================
+   HALAMAN UTAMA (index.php): seksi form, panduan, tombol segmented
+   ========================================================================== */
+/* Lingkaran nomor langkah: dipakai kartu panduan & judul seksi form */
+.step-num {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #15803d; /* putih di atas ini 5:1, hijau #16a34a hanya 3.3:1 */
+  color: #fff;
+  font-size: .85rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Kartu panduan "Cara Pakai" (tinggi ikut isi, tidak ikut tinggi form) */
+.guide-title {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #14532d;
+}
+.guide-title [data-feather] { width: 18px; height: 18px; stroke: #16a34a; }
+.guide-steps { list-style: none; padding: 0; margin: 0; display: grid; gap: .9rem; }
+.guide-steps li { display: flex; gap: .75rem; align-items: flex-start; }
+.guide-steps li > div { min-width: 0; }
+.guide-steps strong { display: block; font-size: .95rem; color: #0f172a; }
+.guide-steps p { margin: .15rem 0 0; font-size: .85rem; line-height: 1.45; color: #55605a; }
+
+.guide-note {
+  display: flex;
+  gap: .5rem;
+  align-items: flex-start;
+  margin: 1.15rem 0 0;
+  padding: .7rem .85rem;
+  border: 1px solid #bbf7d0;
+  border-radius: .5rem;
+  background-color: #f0fdf4;
+  font-size: .85rem;
+  line-height: 1.45;
+  color: #14532d;
+}
+.guide-note [data-feather] {
+  width: 16px; height: 16px; flex: 0 0 auto; margin-top: 2px; stroke: #16a34a;
+}
+
+/* Seksi form (fieldset: Identitas / Detail / Keterangan) */
+.form-section { border: 0; padding: 0; margin: 0; min-width: 0; }
+.form-section + .form-section {
+  border-top: 1px dashed #e0e5e2;
+  margin-top: 1.35rem;
+  padding-top: 1.15rem;
+}
+.form-section-title {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  float: none;
+  width: auto;
+  padding: 0;
+  margin: 0 0 .95rem;
+  font-size: .95rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #14532d;
+}
+.req { color: #dc2626; }
+
+/* Radio Factory jadi tombol segmented (target sentuh 44px) */
+.seg-group { position: relative; display: flex; flex-wrap: wrap; gap: .5rem; }
+.seg-input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
+.seg-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: .5rem 1.25rem;
+  border: 1px solid #d3d8d5;
+  border-radius: 999px;
+  background-color: #f4f6f5;
+  color: #1f2937;
+  font-size: .95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.seg-label:hover { border-color: #16a34a; }
+.seg-input:checked + .seg-label {
+  background-color: #15803d; /* teks putih 5:1 */
+  border-color: #15803d;
+  color: #fff;
+}
+.seg-input:focus-visible + .seg-label { box-shadow: 0 0 0 .2rem rgba(22, 163, 74, .3); }
+
+/* Tombol kirim: hijau brand (konsisten dgn navbar), bukan biru bawaan */
+.btn-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  background-color: #15803d;
+  border-color: #15803d;
+  color: #fff;
+}
+.btn-submit:hover,
+.btn-submit:focus,
+.btn-submit:active {
+  background-color: #166534;
+  border-color: #166534;
+  color: #fff;
+}
+.btn-submit [data-feather] { width: 18px; height: 18px; }
+
+/* --- Mobile: tombol kirim penuh, brand text disembunyikan --- */
+@media (max-width: 767.98px) {
+  .btn-submit { width: 100%; }
+}
+@media (max-width: 420px) {
+  .page-form .navbar-brand .brand-text { display: none; } /* logo tetap terlihat */
+}
+
+/* ==========================================================================
+   HALAMAN LOGIN (login.php)
+   ========================================================================== */
+.login-main {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background:
+    radial-gradient(900px 480px at 8% -12%, rgba(22, 163, 74, .16), transparent 60%),
+    radial-gradient(760px 420px at 108% 112%, rgba(20, 83, 45, .14), transparent 58%),
+    #f3f7f4;
+}
+.login-brand .login-logo { width: 84px; height: auto; }
+.login-brand h1 { font-weight: 600; }
+.login-brand .lead { font-size: 1rem; color: #4b5563; }
+.login-card {
+  border: 1px solid #e6eae8;
+  border-radius: 1rem;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, .10);
+}
+.login-card .card-body { padding: 1.75rem; }
+
+@media (max-width: 575.98px) {
+  .login-card .card-body { padding: 1.25rem; }
+  .login-brand .login-logo { width: 68px; }
+  .login-brand h1 { font-size: 1.25rem; }
+}
+
+/* ==========================================================================
+   TEMA GELAP: elemen baru halaman utama & login
+   ========================================================================== */
+[data-bs-theme="dark"] .guide-title { color: #bbf7d0 !important; }
+[data-bs-theme="dark"] .guide-title [data-feather] { stroke: #22c55e; }
+[data-bs-theme="dark"] .guide-steps strong { color: #f1f5f9; }
+[data-bs-theme="dark"] .guide-steps p { color: #94a3b8; }
+[data-bs-theme="dark"] .guide-note {
+  background-color: rgba(34, 197, 94, .10);
+  border-color: #14532d;
+  color: #bbf7d0;
+}
+[data-bs-theme="dark"] .guide-note [data-feather] { stroke: #22c55e; }
+[data-bs-theme="dark"] .form-section-title { color: #86efac; }
+[data-bs-theme="dark"] .form-section + .form-section { border-top-color: #2d3b4d; }
+[data-bs-theme="dark"] .req { color: #f87171; }
+[data-bs-theme="dark"] .seg-label {
+  background-color: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+[data-bs-theme="dark"] .seg-label:hover { border-color: #22c55e; }
+[data-bs-theme="dark"] .seg-input:checked + .seg-label {
+  background-color: #15803d;
+  border-color: #15803d;
+  color: #fff;
+}
+[data-bs-theme="dark"] .login-main {
+  background:
+    radial-gradient(900px 480px at 8% -12%, rgba(34, 197, 94, .14), transparent 60%),
+    radial-gradient(760px 420px at 108% 112%, rgba(20, 83, 45, .35), transparent 58%),
+    #0f151c;
+}
+[data-bs-theme="dark"] .login-card {
+  background-color: #1b2430;
+  border-color: #2d3b4d;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .45);
+}
+[data-bs-theme="dark"] .login-brand .lead { color: #94a3b8; }
+[data-bs-theme="dark"] .login-logo { filter: brightness(0) invert(1); }
+
+
+/* ==========================================================================
+   HALAMAN DASHBOARD (dashboard.php + pages/*.php)
+   ========================================================================== */
+
+/* --- Page header: judul tab + tombol aksi --- */
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e6eae8;
+}
+.page-title { margin: 0; font-size: 1.5rem; font-weight: 600; color: #0f172a; }
+.page-sub { margin-top: .2rem; font-size: .925rem; color: #55605a; }
+.page-action {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  background-color: #15803d;
+  border-color: #15803d;
+  color: #fff;
+}
+.page-action:hover,
+.page-action:focus,
+.page-action:active {
+  background-color: #166534;
+  border-color: #166534;
+  color: #fff;
+}
+.page-action [data-feather] { width: 17px; height: 17px; }
+
+/* --- Sidebar: header menu lebih kecil (item aktif pil -> lihat blok REDESIN) --- */
+.sidebar-nav .sidebar-header {
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(233, 236, 239, .7); /* sidebar hijau tua: abu gelap gagal kontras */
+}
+
+/* --- Badge notifikasi lonceng --- */
+.navbar .indicator { background-color: #15803d; }
+
+/* --- Kartu KPI (tab Monitoring) --- */
+.kpi-card { border-left: 3px solid #16a34a; }
+.kpi-card-danger { border-left-color: #dc2626; }
+.kpi-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: .7rem;
+  border-radius: 50%;
+}
+.kpi-icon [data-feather] { width: 20px; height: 20px; }
+.kpi-icon-green { background-color: #f0fdf4; color: #15803d; }
+.kpi-icon-amber { background-color: #fffbeb; color: #b45309; }
+.kpi-icon-red   { background-color: #fef2f2; color: #dc2626; }
+.kpi-num { font-size: 1.6rem; font-weight: 600; line-height: 1.15; color: #0f172a; }
+.kpi-label { margin-top: .15rem; font-size: .8rem; color: #55605a; }
+
+/* --- Tabel semua tab: header tegas, baris lega --- */
+.table thead th {
+  font-size: .75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: #55605a;
+  background-color: #fbfcfc;
+  border-bottom-width: 2px;
+  vertical-align: middle;
+}
+.table td { vertical-align: middle; }
+.table > tbody > tr:hover > * { background-color: #f3f7f4; }
+
+/* --- Mobile --- */
+@media (max-width: 575.98px) {
+  .page-title { font-size: 1.25rem; }
+  .page-sub { font-size: .875rem; }
+  .page-action { width: 100%; justify-content: center; }
+  .kpi-num { font-size: 1.35rem; }
+  .kpi-icon { width: 36px; height: 36px; margin-bottom: .55rem; }
+  .kpi-icon [data-feather] { width: 18px; height: 18px; }
+}
+
+/* ==========================================================================
+   TEMA GELAP: elemen dashboard di atas
+   ========================================================================== */
+[data-bs-theme="dark"] .page-header { border-bottom-color: #2d3b4d; }
+[data-bs-theme="dark"] .page-sub { color: #94a3b8; }
+[data-bs-theme="dark"] .kpi-card { border-left-color: #22c55e !important; border-left-width: 3px !important; }
+[data-bs-theme="dark"] .kpi-card-danger { border-left-color: #f87171 !important; }
+[data-bs-theme="dark"] .kpi-icon-green { background-color: rgba(34, 197, 94, .14); color: #4ade80; }
+[data-bs-theme="dark"] .kpi-icon-amber { background-color: rgba(245, 158, 11, .16); color: #fbbf24; }
+[data-bs-theme="dark"] .kpi-icon-red   { background-color: rgba(248, 113, 113, .16); color: #f87171; }
+[data-bs-theme="dark"] .kpi-num { color: #f8fafc; }
+[data-bs-theme="dark"] .kpi-label { color: #94a3b8; }
+[data-bs-theme="dark"] .table > tbody > tr:hover > * { background-color: rgba(255, 255, 255, .04); }
+
+
+/* ==========================================================================
+   REDESIN SELURUH TAB DASHBOARD (7 tab + sidebar + navbar + kartu)
+   ========================================================================== */
+
+/* --- Tombol primary: hijau brand #15803d.
+       Bawaan AdminKit #16a34a -> teks putih cuma 3.3:1 (gagal 4.5:1). --- */
+body { --bs-primary-rgb: 21, 128, 61; } /* .text-primary / .bg-primary / link: #16a34a -> #15803d */
+.btn-primary {
+  --bs-btn-bg: #15803d;
+  --bs-btn-border-color: #15803d;
+  --bs-btn-hover-bg: #166534;
+  --bs-btn-hover-border-color: #166534;
+  --bs-btn-focus-shadow-rgb: 21, 128, 61;
+  --bs-btn-active-bg: #166534;
+  --bs-btn-active-border-color: #166534;
+  --bs-btn-disabled-bg: #15803d;
+  --bs-btn-disabled-border-color: #15803d;
+}
+.btn-outline-primary {
+  --bs-btn-color: #15803d;
+  --bs-btn-border-color: #15803d;
+  --bs-btn-hover-bg: #15803d;
+  --bs-btn-hover-border-color: #15803d;
+  --bs-btn-focus-shadow-rgb: 21, 128, 61;
+  --bs-btn-active-bg: #15803d;
+  --bs-btn-active-border-color: #15803d;
+}
+
+/* --- Kartu: radius seragam (.75rem), judul tegas (bawaan abu #939ba2), bayangan halus --- */
+body[data-layout] { --bs-card-border-radius: .75rem; --bs-card-inner-border-radius: .75rem; }
+.card-title { color: #0f172a; font-weight: 600; }
+.main .card { box-shadow: 0 1px 2px rgba(15, 23, 42, .05); }
+.card-footer { background-color: #fbfcfc; border-top: 1px solid #eef1f0; }
+
+/* --- Sidebar: item menu jadi pil, item aktif hijau solid --- */
+.sidebar-nav .sidebar-item .sidebar-link {
+  margin: .15rem .75rem;
+  border-radius: .5rem;
+}
+.sidebar-nav .sidebar-item .sidebar-link:focus-visible {
+  outline: 2px solid #86efac;
+  outline-offset: -2px;
+}
+.sidebar-nav .sidebar-item.active .sidebar-link,
+.sidebar-nav .sidebar-item.active .sidebar-link:hover {
+  background: #15803d; /* shorthand: buang gradasi bawaan AdminKit */
+  border-left-color: transparent; /* border 3px tetap transparan supaya teks sejajar */
+  color: #fff;
+}
+.sidebar-nav .sidebar-item.active .sidebar-link i,
+.sidebar-nav .sidebar-item.active .sidebar-link svg,
+.sidebar-nav .sidebar-item.active .sidebar-link [data-feather] { color: #fff; }
+.sidebar-nav .sidebar-item.active .sidebar-link:hover,
+.sidebar-nav .sidebar-item.active .sidebar-link:hover i,
+.sidebar-nav .sidebar-item.active .sidebar-link:hover svg { color: #fff; }
+
+/* --- Navbar dashboard: pemisah tegas dari konten --- */
+.main .navbar {
+  border-bottom: 1px solid #e6eae8;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .05);
+}
+
+/* --- Angka di tabel: rata kanan + angka tabular --- */
+.table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.table .num-up { color: #15803d; }
+.table .num-down { color: #dc2626; }
+
+/* --- Tab Pengaturan: baris opsi jadi kotak --- */
+.opt-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem .65rem;
+  border: 1px solid #e6eae8;
+  border-radius: .5rem;
+  background-color: #fff;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+.opt-row:hover { border-color: #bbf7d0; background-color: #f8fdfa; }
+.opt-no {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #f0fdf4;
+  color: #15803d;
+  font-size: .75rem;
+  font-weight: 600;
+}
+.opt-form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+  min-width: 0;
+}
+.opt-form .form-control { flex: 1 1 160px; min-width: 0; }
+
+/* ==========================================================================
+   TEMA GELAP: redesign di atas
+   ========================================================================== */
+[data-bs-theme="dark"] .sidebar-nav .sidebar-header { color: rgba(233, 236, 239, .7) !important; }
+[data-bs-theme="dark"] .card-footer {
+  background-color: #171e28;
+  border-top-color: #2d3b4d;
+}
+[data-bs-theme="dark"] .main .navbar { border-bottom-color: #2d3b4d; }
+[data-bs-theme="dark"] .table .num-up { color: #4ade80; }
+[data-bs-theme="dark"] .table .num-down { color: #f87171; }
+[data-bs-theme="dark"] .opt-row {
+  background-color: #1b2430;
+  border-color: #2d3b4d;
+}
+[data-bs-theme="dark"] .opt-row:hover {
+  background-color: #22303f;
+  border-color: #14532d;
+}
+[data-bs-theme="dark"] .opt-no {
+  background-color: rgba(34, 197, 94, .14);
+  color: #4ade80;
 }

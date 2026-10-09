@@ -453,8 +453,15 @@ $qNotif = log_transaksi(4);
         <!-- Konten -->
         <main class="content">
             <div class="container-fluid p-0">
-                <h1 class="h3 mb-0"><?= e($judul[$tab][0]) ?></h1>
-                <p class="text-muted mb-3"><?= e($judul[$tab][1]) ?></p>
+                <div class="page-header">
+                    <div class="page-header-text">
+                        <h1 class="page-title"><?= e($judul[$tab][0]) ?></h1>
+                        <p class="page-sub mb-0"><?= e($judul[$tab][1]) ?></p>
+                    </div>
+                    <a class="btn btn-primary page-action" href="index.php">
+                        <i data-feather="plus-square"></i>Input Pengambilan
+                    </a>
+                </div>
 
                 <?php if ($pesan) echo flash_div($pesan, $warna); ?>
                 <?php include __DIR__ . "/pages/$tab.php"; ?>

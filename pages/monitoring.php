@@ -18,56 +18,40 @@ $trxHariIni = db()->query("SELECT
         (SELECT COUNT(*) FROM apd_masuk WHERE DATE(created_at) = CURDATE())")->fetchColumn();
 ?>
 <!-- KPI hanya di Monitoring -->
-<div class="row mb-3">
-    <div class="col-sm-6 col-xl-3">
+<div class="row g-3 mb-3">
+    <div class="col-6 col-xl-3">
         <div class="card h-100 kpi-card">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="me-2">
-                        <h4 class="mb-0"><?= count($stokRows) ?></h4>
-                        <div class="text-muted text-small">Jenis APD Terdaftar</div>
-                    </div>
-                    <i class="align-middle flex-shrink-0" data-feather="box"></i>
-                </div>
+                <div class="kpi-icon kpi-icon-green"><i data-feather="box"></i></div>
+                <div class="kpi-num"><?= count($stokRows) ?></div>
+                <div class="kpi-label">Jenis APD Terdaftar</div>
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-3">
-        <div class="card h-100 kpi-card">
+    <div class="col-6 col-xl-3">
+        <div class="card h-100 kpi-card <?= $menipis > 0 ? 'kpi-card-danger' : '' ?>">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="me-2">
-                        <h4 class="mb-0"><?= $menipis ?></h4>
-                        <div class="text-muted text-small">Stok Habis / Menipis</div>
-                    </div>
-                    <i class="align-middle flex-shrink-0 <?= $menipis > 0 ? 'text-danger' : 'text-success' ?>" data-feather="alert-triangle"></i>
-                </div>
+                <div class="kpi-icon <?= $menipis > 0 ? 'kpi-icon-red' : 'kpi-icon-green' ?>"><i data-feather="alert-triangle"></i></div>
+                <div class="kpi-num"><?= $menipis ?></div>
+                <div class="kpi-label">Stok Habis / Menipis</div>
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
         <div class="card h-100 kpi-card">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="me-2">
-                        <h4 class="mb-0"><?= (int)$trxHariIni ?></h4>
-                        <div class="text-muted text-small">Transaksi Hari Ini</div>
-                    </div>
-                    <i class="align-middle flex-shrink-0" data-feather="trending-up"></i>
-                </div>
+                <div class="kpi-icon kpi-icon-amber"><i data-feather="trending-up"></i></div>
+                <div class="kpi-num"><?= (int)$trxHariIni ?></div>
+                <div class="kpi-label">Transaksi Hari Ini</div>
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
         <div class="card h-100 kpi-card">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="me-2">
-                        <h4 class="mb-0">Rp <?= number_format($totalNilai, 0, ',', '.') ?></h4>
-                        <div class="text-muted text-small">Total Nilai Stok</div>
-                    </div>
-                    <i class="align-middle flex-shrink-0" data-feather="dollar-sign"></i>
-                </div>
+                <div class="kpi-icon kpi-icon-green"><i data-feather="dollar-sign"></i></div>
+                <div class="kpi-num">Rp <?= number_format($totalNilai, 0, ',', '.') ?></div>
+                <div class="kpi-label">Total Nilai Stok</div>
             </div>
         </div>
     </div>
@@ -83,7 +67,7 @@ $trxHariIni = db()->query("SELECT
                 <thead>
                     <tr>
                         <th>Timestamp</th><th>Tanggal</th><th>Nama Karyawan</th><th>Nomor Bundy</th>
-                        <th>Departemen</th><th>Factory</th><th>Jenis APD</th><th>Jumlah</th>
+                        <th>Departemen</th><th>Factory</th><th>Jenis APD</th><th class="num">Jumlah</th>
                         <th>Monitoring</th><th>Alasan</th><th>Catatan</th>
                     </tr>
                 </thead>
@@ -100,7 +84,7 @@ $trxHariIni = db()->query("SELECT
                         <td><?= e($r['departemen']) ?></td>
                         <td><?= e($r['factory']) ?></td>
                         <td><?= e($r['nama_apd']) ?></td>
-                        <td><?= (int)$r['jumlah'] ?></td>
+                        <td class="num"><?= (int)$r['jumlah'] ?></td>
                         <td><?= e(opsi_monitoring()[$r['monitoring']] ?? $r['monitoring']) ?></td>
                         <td><?= e($r['alasan']) ?></td>
                         <td><?= e($r['catatan']) ?></td>

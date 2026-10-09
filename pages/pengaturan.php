@@ -52,14 +52,13 @@ if (form_opsi_siap()) {
                     <?php else: ?>
                         <div class="d-flex flex-column gap-2">
                             <?php $no = 0; foreach ($daftar as $nilai => $label): $no++; $idOpsi = $idMap[$kat][$nilai] ?? null; ?>
-                                <div class="d-flex gap-2 align-items-center">
+                                <div class="opt-row">
                                     <?php if ($idOpsi !== null): ?>
-                                        <form method="post" action="?tab=pengaturan"
-                                              class="d-flex gap-2 align-items-center flex-grow-1">
+                                        <span class="opt-no"><?= $no ?></span>
+                                        <form method="post" action="?tab=pengaturan" class="opt-form">
                                             <input type="hidden" name="aksi" value="edit_opsi">
                                             <input type="hidden" name="kategori" value="<?= e($kat) ?>">
                                             <input type="hidden" name="id" value="<?= $idOpsi ?>">
-                                            <span class="text-muted small" style="width: 1.25rem; flex-shrink: 0"><?= $no ?></span>
                                             <input type="text" name="label" class="form-control form-control-sm"
                                                    value="<?= e($label) ?>" maxlength="100" required>
                                             <button type="submit" class="btn btn-sm btn-outline-primary text-nowrap">
@@ -72,13 +71,13 @@ if (form_opsi_siap()) {
                                                 <input type="hidden" name="aksi" value="hapus_opsi">
                                                 <input type="hidden" name="kategori" value="<?= e($kat) ?>">
                                                 <input type="hidden" name="id" value="<?= $idOpsi ?>">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus opsi">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus opsi" aria-label="Hapus opsi">
                                                     <i class="align-middle" data-feather="trash-2"></i>
                                                 </button>
                                             </form>
                                         <?php endif; ?>
                                     <?php else: ?>
-                                        <span class="text-muted small" style="width: 1.25rem; flex-shrink: 0"><?= $no ?></span>
+                                        <span class="opt-no"><?= $no ?></span>
                                         <span class="flex-grow-1"><?= e($label) ?></span>
                                     <?php endif; ?>
                                 </div>
